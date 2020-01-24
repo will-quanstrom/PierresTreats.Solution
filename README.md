@@ -26,7 +26,7 @@ _A bakery owner is greeted by a homepage. They can then follow links to see a li
 
 ## Known Bugs
 
-_None at this time.}_
+_None at this time._
 
 ## Support and contact details
 
