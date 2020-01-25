@@ -5,11 +5,11 @@
 @using PierresTreats.Models;
 @model IEnumerable<PierresTreats.Models.Flavor>;
 
-<h1>Treats</h1>
+<h1>Flavors</h1>
 
 @if (!@Model.Any())
 {
-  <h3>No treats have been added yet!</h3>
+  <h3>No flavors have been added yet!</h3>
 } 
 
 @foreach (Flavor flavor in Model)

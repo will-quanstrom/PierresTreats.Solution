@@ -40,6 +40,7 @@ namespace PierresTreats.Controllers
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var currentUser =  await _userManager.FindByIdAsync(userId);
             flavor.User = currentUser;
+            _db.Flavors.Add(flavor);
             if (TreatId != 0)
             {
                 _db.TreatFlavor.Add(new TreatFlavor() { TreatId = TreatId, FlavorId = flavor.FlavorId});
@@ -53,7 +54,7 @@ namespace PierresTreats.Controllers
         {
             var thisFlavor = _db.Flavors
                 .Include(flavor => flavor.Treats)
-                .ThenInclude(join => join.Flavor)
+                .ThenInclude(join => join.Treat)
                 .FirstOrDefault(flavor => flavor.FlavorId == id);
                 return View(thisFlavor);
         }
@@ -64,6 +65,19 @@ namespace PierresTreats.Controllers
             var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
             ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
             return View(thisFlavor);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult Edit(Flavor flavor, int TreatId)
+        {
+            if (TreatId != 0)
+            {
+            _db.TreatFlavor.Add(new TreatFlavor() { FlavorId = flavor.FlavorId, TreatId = TreatId });
+            }
+            _db.Entry(flavor).State = EntityState.Modified;
+            _db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         [Authorize]
@@ -89,7 +103,7 @@ namespace PierresTreats.Controllers
         [Authorize]
         public ActionResult Delete(int id)
         {
-            var thisFlavor = _db.Treats.FirstOrDefault(flavors => flavors.FlavorId == id);
+            var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
             return View(thisFlavor);
         }
 
